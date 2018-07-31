@@ -1,1 +1,76 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.report{
+    border-style: double;
+    border-color: white;
+    background-color: lightgray;
+    height: 100px;
+    margin: 2px;
+    text-align: center;
+    vertical-align: middle;
+}
+.first-row {
+    margin-top: 0px;
+}
+
+.second-row {
+    margin-bottom: 0px;
+}
+
+.dashboard-header {
+    border: none;
+    height: 200px;
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    justify-items: center;
+    font-weight: bolder;
+    
+}
+
+.html-color {
+    background-color: red;
+    width: 15%;
+}
+
+.css-color {
+    background-color: yellow;
+    width: 10%;
+}
+
+.java-color {
+    background-color: tan;
+    width: 20%;
+}
+
+.spring-color {
+    background-color:green;
+    width: 10%;
+}
+
+.rest-color {
+    background-color: blue;
+    width: 7.5%;
+}
+
+.angular1-color {
+    background-color:rosybrown;
+    width: 7.5%;
+}
+
+.angular2-color {
+    background-color:brown;
+    width: 7%;
+}
+.react-color {
+    background-color:olivedrab;
+    width: 5%;
+}
+.none-color{
+    background-color:lightgrey;
+    margin-right: 2px;
+}
+.moderate-size{
+    width: 9.5%;
+}

@@ -1,0 +1,50 @@
+<div>
+  <h3>Skills Tracker: Search Associate</h3>
+</div>
+<div class="row">
+  <div class="col-sm-1 html-color dashboard-header pull-left">HTML5</div>
+  <div class="col-sm-2 css-color dashboard-header pull-left">CSS3</div>
+  <div class="col-sm-2 java-color dashboard-header pull-left">Java</div>
+  <div class="col-sm-1 spring-color dashboard-header pull-left">Spring</div>
+  <div class="col-sm-1 rest-color dashboard-header pull-left">Restful</div>
+  <div class="col-sm-1 angular1-color dashboard-header pull-left">Angular1</div>
+  <div class="col-sm-1 angular2-color dashboard-header pull-left">Angular2</div>
+  <div class="col-sm-1 react-color dashboard-header pull-left">React</div>
+  <div class="col-sm-1 none-color dashboard-header pull-left"></div>
+  <div class="col-sm-1 report first-row pull-left">{{associateObj.level2Percentage}}% Level 3 Candidates</div>
+  <div class="col-sm-1 report second-row pull-left">{{associateObj.level3Percentage}}% Level 2 Candidates</div>
+</div>
+<div class="row">
+  <span class="col-sm-2 report">{{associateObj.associatesCount}} Registered Candidates</span>
+  <span class="col-sm-2 report">{{associateObj.femalePercentage}}% Female Candidates</span>
+  <span class="col-sm-2 report">{{associateObj.malePercentage}}% Male Candidates</span>
+  <span class="col-sm-1 report moderate-size">{{associateObj.freshersPercentage}}% Candidates Freshers</span>
+  <span class="col-sm-1 report moderate-size">{{associateObj.ratedAssociatesCount}} Candidates Rated</span>
+  <span class="col-sm-1 report moderate-size">{{associateObj.femaleRatedPercentage}}% Female Candidates Rated</span>
+  <span class="col-sm-1 report moderate-size">{{associateObj.maleRatedPercentage}}% Male Candidates Rated</span>
+  <span class="col-sm-1 report lastbox-size">{{associateObj.level1Percentage}}% Level 1 Candidates</span>
+</div>
+<div>
+  <table class="table table-striped table-bordered associate-datatable">
+    <tr>
+      <th scope="col" class="status-header">Status</th>
+      <th scope="col" class="name-header"><input type="text" class="form-control" id="searchName" name="searchName" [(ngModel)]="searchName" placeholder="Associate Name"></th>
+      <th scope="col" class="id-header"><input type="text" class="form-control" id="searchId" name="searchId" [(ngModel)]="searchId" placeholder="Associate ID"></th>
+      <th scope="col" class="email-header"><input type="text" class="form-control" id="searchEmail" name="searchEmail" [(ngModel)]="searchEmail" placeholder="Email ID"></th>
+      <th scope="col" class="mobile-header"><input type="text" class="form-control" id="searchMobile" name="searchMobile" [(ngModel)]="searchMobile" placeholder="Mobile No"></th>
+      <th scope="col" class="skills-header"><input type="text" class="form-control" id="searchSkill" name="searchSkill" [(ngModel)]="searchSkill" placeholder="Skills"></th>
+      <th scope="col" colspan="3" class="actions"><input type="button" class="btn btn-primary" value="Add New Associate" (click)="addAssociate()"/></th>
+    </tr>
+    <tr *ngFor="let associateListObj of associateObj.associatesList | associateFilter:searchName:searchId:searchEmail:searchMobile:searchSkill">
+      <td><span class="status-circle {{associateListObj.status}}"></span></td>
+      <td>{{associateListObj.associateName}}</td>
+      <td>{{associateListObj.associateId}}</td>
+      <td>{{associateListObj.email}}</td>
+      <td>{{associateListObj.mobile}}</td>
+      <td>{{associateListObj.skills}}</td>
+      <td class="actions"><input type="button" class="btn btn-primary" value="Edit" (click)="editAssociate(associateListObj.id)"/></td>
+      <td class="actions"><input type="button" class="btn btn-primary" value="Delete" (click)="deleteAssociate(associateListObj)"/></td>
+      <td class="actions"><input type="button" class="btn btn-primary" value="View" (click)="viewAssociate(associateListObj.id)"/></td>
+    </tr>
+  </table>
+</div>

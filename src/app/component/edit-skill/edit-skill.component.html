@@ -1,0 +1,14 @@
+<div mat-dialog-content>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="skill">Skill Name:</label>
+    <span class="col-sm-10">
+      <input type="text" class="form-control" id="skillName" name="skillName" [(ngModel)]="skillObj.skillName">
+    </span>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <div class="btn-group">
+    <button type="submit" class="btn btn-primary update" (click)="updateSkill()">Update</button>
+    <button type="submit" class="btn btn-primary cancel" (click)="cancel()">Cancel</button>
+  </div>
+</div>

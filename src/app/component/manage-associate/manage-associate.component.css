@@ -1,0 +1,53 @@
+.associate-datatable{
+    width: 100%;
+    /*border: 1px;
+    border-style: solid;*/
+}
+.associate-datatable th{
+    text-align: center;
+    font-weight: bold;
+}
+.pic-header{
+    width: 5%;
+}
+.status-header{
+    width: 5%;
+}
+.name-header{
+    width: 15%;
+}
+.id-header{
+    width: 10%;
+}
+.email-header{
+    width: 15%;
+}
+.mobile-header{
+    width: 10%;
+}
+.skills-header{
+    width: 20%;
+}
+
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    float: left;
+    margin: 5px 10px 5px 20px;
+}
+.status-circle.green {
+    background: #30CB00;
+}
+.status-circle.blue {
+    background: #0f2953;
+}
+.status-circle.red {
+    background: #F73100;
+}
+.associate-datatable th.actions, .associate-datatable td.actions{
+    border: 0px;
+    vertical-align: middle;
+    justify-content: center;
+    align-content: center;
+}

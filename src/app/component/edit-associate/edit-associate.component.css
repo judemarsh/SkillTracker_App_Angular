@@ -1,0 +1,20 @@
+.status-radio-group, .level-radio-group {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.status-radio-button, .level-radio-button, .gender-radio-button {
+    margin: 5px;
+}
+
+.status-selected-value,.level-selected-value,.gender-selected-value {
+    margin: 15px 0;
+}
+
+.btn-group{
+    float: right;
+}
+
+.sliderClass{
+    width: 100%;
+}
