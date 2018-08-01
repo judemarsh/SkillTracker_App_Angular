@@ -8,14 +8,17 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule, MatDialog } from '@angular/material';
 import { SkillService } from '../../service/skill.service';
 import { By } from '@angular/platform-browser';
 import { AppSettings } from '../../app-settings';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { EditSkillComponent } from '../edit-skill/edit-skill.component';
 
 describe('ManageSkillComponent', () => {
   let component: ManageSkillComponent;
   let fixture: ComponentFixture<ManageSkillComponent>;
+  let dialog: MatDialog;
 
   const mockSkillList: Skill[] = [
     {
@@ -32,6 +35,8 @@ describe('ManageSkillComponent', () => {
     }
   ];
 
+  const mockSkillData: Skill = new Skill(2, "Skill 2");
+
   let mockSkillService = {
     getSkillsList(): Observable<any>{
       return of(mockSkillList);
@@ -45,24 +50,32 @@ describe('ManageSkillComponent', () => {
       let index = mockSkillList.indexOf(skillObj);
       mockSkillList.splice(index, 1);
       return of(true);
-    }
+    },
+    getSkillById(skillId: number) : Observable<Skill>{
+      return of(mockSkillData);
+    },
   };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ManageSkillComponent, SkillPipe ],
+      declarations: [ ManageSkillComponent,EditSkillComponent, SkillPipe ],
       schemas: [NO_ERRORS_SCHEMA],
       imports: [HttpClientModule, RouterTestingModule, BrowserAnimationsModule, FormsModule, MatDialogModule],
       providers: [{provide: SkillService, useValue: mockSkillService}, AppSettings]
+    }).overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [EditSkillComponent],
+      },
     })
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(inject([MatDialog],(_dialog:MatDialog) => {
     fixture = TestBed.createComponent(ManageSkillComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    dialog = _dialog;   
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -80,6 +93,7 @@ describe('ManageSkillComponent', () => {
   });
 
   it('it should add new skill', async(inject([SkillService], (skillService: SkillService) => {
+    component.skillObj = new Skill(null,null);
     const element = fixture.nativeElement;
     element.querySelector('#skillName').value = "Skill 4";
     fixture.detectChanges();
@@ -110,5 +124,17 @@ describe('ManageSkillComponent', () => {
     expect(component.skillList).toEqual(mockSkillList);
     expect(element.querySelectorAll('div.skillRow').length - 1).toBe(2);
   })));
+
+  it('it should add new dialog for editing skill', async(() => {
+    component.editSkill(2);
+    const dialogRef = dialog.open(EditSkillComponent, {data: {contentHeader: "Update Skill",skillId: 2}});
+    const spy = jasmine.createSpy('afterAllClosed spy');
+    dialog.afterAllClosed.subscribe(spy);
+    fixture.detectChanges();
+    
+    dialogRef.close();
+    fixture.detectChanges();
+    expect(spy).toBeTruthy();
+  }));
 
 });

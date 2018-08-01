@@ -33,15 +33,11 @@ export class EditSkillComponent implements OnInit {
 
   updateSkill(){
     this.skillService.updateSkill(this.skillObj).subscribe(responseData => { 
-      //this.router.navigate(['/','manageSkills']);
-      //this.router.navigateByUrl('/manageSkills');
       this.dialogRef.close();
-      //window.location.reload();
     });
   }
 
   cancel(){
-    //this.router.navigate(['/manageSkills']);
     this.dialogRef.close();
   }
 

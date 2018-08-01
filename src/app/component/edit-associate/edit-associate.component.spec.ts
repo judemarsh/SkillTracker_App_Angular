@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 
 import { EditAssociateComponent } from './edit-associate.component';
 import { Associate } from '../../model/associate';
@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule, MatInputModule, MatRadioModule, MatSliderModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogModule, MatInputModule, MatRadioModule, MatSliderModule, MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { AssociateService } from '../../service/associate.service';
 import { Observable, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -17,14 +17,14 @@ import { ManageAssociateComponent } from '../manage-associate/manage-associate.c
 import { ManageSkillComponent } from '../manage-skill/manage-skill.component';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 import { Location } from '@angular/common';
+import { AppModule } from '../../app.module';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 describe('EditAssociateComponent', () => {
   let component: EditAssociateComponent;
   let fixture: ComponentFixture<EditAssociateComponent>;
-
-  const mockDialogRef = {
-    close: jasmine.createSpy('close')
-  };
+  let dialog: MatDialog;
+  let mockDialogRef:MatDialogRef<EditAssociateComponent>;
 
   const mockAssociateObj: Associate = new Associate(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
   mockAssociateObj.id = 1000;
@@ -79,16 +79,22 @@ describe('EditAssociateComponent', () => {
       declarations: [ EditAssociateComponent ],
       schemas: [NO_ERRORS_SCHEMA],
       imports: [HttpClientModule, RouterTestingModule, BrowserAnimationsModule, FormsModule, MatDialogModule, MatInputModule, MatRadioModule, MatSliderModule],
-      providers: [{provide: AssociateService, useValue: mockAssociateService}, {provide: MAT_DIALOG_DATA, useValue: mockDialogRef},{provide: MatDialogRef, useValue: ""}, AppSettings]
+      providers: [{provide: AssociateService, useValue: mockAssociateService}, {provide: MAT_DIALOG_DATA, useValue: ""},{provide: MatDialogRef, useValue: mockDialogRef}, AppSettings]
+    }).overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [EditAssociateComponent],
+      },
     })
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(inject([MatDialog],(_dialog:MatDialog) => {
     fixture = TestBed.createComponent(EditAssociateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+    dialog = _dialog;
+    mockDialogRef = dialog.open(EditAssociateComponent,{data: {popupMode: "CREATE"}});
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -103,7 +109,7 @@ describe('EditAssociateComponent', () => {
     expect(associateObj.associateName).toEqual(mockAssociateObj.associateName);
   })));
 
-  it('should add new associate',async(inject([AssociateService,Router, Location], (associateService: AssociateService,router: Router, location: Location) => {
+  it('should add new associate',fakeAsync(inject([AssociateService,Router, Location], (associateService: AssociateService,router: Router, location: Location) => {
     component.popupMode = "CREATE";
     fixture.detectChanges();
     const element = fixture.nativeElement;
@@ -114,7 +120,8 @@ describe('EditAssociateComponent', () => {
     element.querySelector('#remark').value = "Remark";
     let buttonClick = fixture.debugElement.query(By.css('.create')).nativeElement.click();
     fixture.detectChanges();
-    expect(mockDialogRef.close()).toHaveBeenCalled();
+    tick();
+    expect(mockDialogRef.close).toBeTruthy();
     const associateData: Associate = new Associate(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
     associateData.id = null;
     associateData.associateId = 1245;
@@ -125,8 +132,8 @@ describe('EditAssociateComponent', () => {
     associateData.strength = "Strength";
     associateData.weakness = "weakness";
     associateData.gender = "MALE";
-    associateData.level = "LEVEL_1"
-    associateData.status = "green";    
+    associateData.level = "LEVEL_3"
+    associateData.status = "blue";    
     fixture.detectChanges();
     associateService.saveAssociate(associateData).subscribe(data => { 
       associateData.id = data;
@@ -134,7 +141,7 @@ describe('EditAssociateComponent', () => {
     fixture.detectChanges();
   })));
 
-  it('should update new associate',async(inject([AssociateService,Router, Location], (associateService: AssociateService,router: Router, location: Location) => {
+  it('should update new associate',fakeAsync(inject([AssociateService,Router, Location], (associateService: AssociateService,router: Router, location: Location) => {
     component.popupMode = "EDIT";
     fixture.detectChanges();
     const element = fixture.nativeElement;
@@ -145,19 +152,20 @@ describe('EditAssociateComponent', () => {
     element.querySelector('#remark').value = "Remark";
     let buttonClick = fixture.debugElement.query(By.css('.update')).nativeElement.click();
     fixture.detectChanges();
-    expect(mockDialogRef.close());
+    tick();
+    expect(mockDialogRef.close).toBeTruthy();
     const associateData: Associate = new Associate(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
     associateData.id = 1001;
     associateData.associateId = 1245;
-    associateData.associateName = "MARSHAL";
-    associateData.email = "marshal@abc.in";
+    associateData.associateName = "ABC";
+    associateData.email = "abc@abc.in";
     associateData.mobile = 9870654321;
     associateData.remark = "Remark";
     associateData.strength = "Strength";
     associateData.weakness = "weakness";
-    associateData.gender = "MALE";
-    associateData.level = "LEVEL_1"
-    associateData.status = "green";    
+    associateData.gender = "FEMALE";
+    associateData.level = "LEVEL_2"
+    associateData.status = "red";    
     fixture.detectChanges();
     associateService.updateAssociate(associateData).subscribe(data => { 
       associateData.id = data;
@@ -165,13 +173,20 @@ describe('EditAssociateComponent', () => {
     fixture.detectChanges();
   })));
 
-  it('it should delete associate', async(inject([AssociateService], (associateService: AssociateService) => {
+  it('it should delete associate', fakeAsync(inject([AssociateService], (associateService: AssociateService) => {
     const element = fixture.nativeElement;
     let responseData: boolean;
     associateService.deleteAssociate(1001).subscribe(data => {
       responseData = data;
     });
     fixture.detectChanges();
-    expect(mockDialogRef.close()).toHaveBeenCalled();
+    tick();
+    expect(mockDialogRef.close).toBeTruthy();
   }))); 
+
+  it('it should close the dialog on cancelling', fakeAsync(() => {
+    component.cancel();
+    tick();
+    expect(mockDialogRef.close).toBeTruthy();
+  })); 
 });

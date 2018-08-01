@@ -5,27 +5,37 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class AssociatePipe implements PipeTransform {
 
-  transform(value: any, searchName: any, searchId: number, searchEmail: any, searchMobile: number, searchSkill: any): any {
+  transform(value: any, searchName: any, searchId: any, searchEmail: any, searchMobile: any, searchSkill: any): any {
     if(!value) return [];
     if(!searchName && !searchId && !searchEmail && !searchMobile && !searchSkill) return value;
 
     return value.filter(associateObj => {
+      let nameResult: boolean = true;
+      let idResult: boolean = true;
+      let emailResult: boolean = true;
+      let mobileResult: boolean = true;
+      let skillResult: boolean = true;
       if(searchName){
-        associateObj = associateObj.associateName.toLowerCase().includes(searchName.toLowerCase());
+        nameResult = associateObj.associateName.toLowerCase().includes(searchName.toLowerCase());
       }
-      if(searchId && associateObj.associateId.indexOf(searchId) > -1){
-        associateObj = associateObj;
+      if(searchId){
+        let text: string = associateObj.associateId.toString();
+        idResult = text.includes(searchId);
       }
       if(searchEmail){
-        associateObj = associateObj.email.toLowerCase().includes(searchEmail.toLowerCase());
+        emailResult = associateObj.email.toLowerCase().includes(searchEmail.toLowerCase());
       }
       if(searchMobile){
-        associateObj = associateObj.mobile.filter(searchMobile);
+        let text: string = associateObj.mobile.toString();
+        mobileResult = text.includes(searchMobile);
       }
       if(searchSkill){
-        associateObj = associateObj.skills.toLowerCase().includes(searchSkill.toLowerCase());
+        skillResult = associateObj.skills.toLowerCase().includes(searchSkill.toLowerCase());
       }
-      return associateObj;
+      if(nameResult && idResult && emailResult && mobileResult && skillResult){
+        return true;
+      }
+      return false;
     });
   }
 }
